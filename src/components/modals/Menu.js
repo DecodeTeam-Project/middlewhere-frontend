@@ -6,14 +6,14 @@ import './Menu.css';
 
 
 class Menu extends Component {
-  
+
   handleClickOutside = () => {
     this.props.closeMenu();
   }
 
   _logOut = () => {
     auth.logout()
-    
+
   }
 
   render() {
@@ -50,7 +50,6 @@ class Menu extends Component {
             </Link>
           : null}
         </div>
-4
       </div>
     );
   }

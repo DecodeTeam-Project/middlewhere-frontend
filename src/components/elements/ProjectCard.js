@@ -34,13 +34,10 @@ export default class ProjectCard extends Component {
             <LinearProgress mode="determinate" value={progress} />
           </Card>
         </Link>
+        {auth.props.isAdmin ?  <EditButton editButtonClick={this._editProjectForm} /> : null}
+        {this.state.editProject ? <EditProject /> : null}
       </div>
     );
-
-
-
-   {auth.props.isAdmin ?  <EditButton editButtonClick={this._editProjectForm} /> : null}
-   {this.state.editProject ? <EditProject /> : null}
 
   }
 

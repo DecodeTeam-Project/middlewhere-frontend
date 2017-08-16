@@ -32,7 +32,7 @@ export default class SignUp extends Component {
 
   _handleSignup = (e) => {
     e.preventDefault();
-
+    console.log(this.refs.firstName.getValue(), this.refs.lastName.getValue(), this.refs.email.getValue(), this.refs.password.getValue())
     api.requestSignup(this.refs.firstName.getValue(), this.refs.lastName.getValue(), this.refs.email.getValue(), this.refs.password.getValue())
     .then(res => {
       if(this.refs.firstName.getValue() && this.refs.lastName.getValue() && this.refs.email.getValue() && this.refs.password.getValue()){

@@ -12,12 +12,12 @@ export default class CreateBookmark extends Component {
   }
 
   _handleClick = (e) => {
-    // e.preventDefault()
+    e.preventDefault()
     this._fetchData()
   }
 
   _handleInput = (e) => {
-    // e.preventDefault()
+    e.preventDefault()
     if (e.target.value.length <= 80){
       this.setState({
         inputValue:e.target.value
@@ -26,11 +26,9 @@ export default class CreateBookmark extends Component {
   }
 
   _fetchData = () => {
-
-    api.createBookmarks(this.props.projectId, this.refs.title.value, this.refs.description.value, this.refs.description.value, localStorage.token)
+    api.createTasks(this.props.projectId, this.refs.title.value, this.refs.description.value, this.refs.deadline.value, this.refs.priority.value)
     .then(res => {
-      
-      history.push(`/projects/${this.props.projectId}`) 
+      history.push(`/projects/${this.props.projectId}`)
     })
   }
 
@@ -43,8 +41,10 @@ export default class CreateBookmark extends Component {
           DESCRIPTION: <input type="text" ref="description"  value={this.state.inputValue} onInput={(e)=>this._handleInput(e)}/>
           {80-this.state.inputValue.length}
           <hr/>
+          PRIORITY: <input type="text" ref="priority"/>
+          <hr/>
           DEADLINE: <input type="text" ref="deadline"/>
-          <button type="submit" onClick={(e) => this._handleClick(e)}>Create</button> 
+          <button type="submit" onClick={(e) => this._handleClick(e)}>Create</button>
         </form>
 
       </div>
@@ -52,8 +52,3 @@ export default class CreateBookmark extends Component {
   }
 
 }
-
-
-
-
- 

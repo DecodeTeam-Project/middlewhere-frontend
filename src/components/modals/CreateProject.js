@@ -25,12 +25,15 @@ export default class CreateProject extends Component {
     this._fetchData()
     }
 
+//put required title
   _fetchData = () =>{
     api.createProjects(this.refs.title.getValue(), this.refs.deadline.getValue(), this.refs.description.getValue(), localStorage.token)
-
     .then (res => {
-      history.push(`/`)
+      var solving = JSON.parse(res.text)
+      console.log(solving[0].id)
+      history.push(`/projects/${solving[0].id}`)
     })
+
   }
 
   render(){

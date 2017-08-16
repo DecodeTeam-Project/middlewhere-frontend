@@ -1,17 +1,19 @@
 import superagent from 'superagent'
 import { API_HOST } from './config'
 
+
 class Api {
-  requestSignup = (email, password) => (
+  requestSignup = (firstName, lastName, email, password) => (
     superagent
     .post(`${API_HOST}/auth/users`)
-    .send({email, password})
+    .send({firstName, lastName, email, password})
   )
 
   requestLogin = (email, password) => (
     superagent
     .post(`${API_HOST}/auth/sessions`)
     .send({ email, password })
+
   )
 
   requestLogout = (token) => (
@@ -23,17 +25,19 @@ class Api {
   getProjectsList = (page, count) => (
     superagent
     .get(`${API_HOST}/projects`)
+    .set('Authorization', `token ${localStorage.token}`)
   )
 
   getProjects = (id) => (
     superagent
     .get(`${API_HOST}/projects/${id}`)
+    .set('Authorization', `token ${localStorage.token}`)
   )
 
-  createProjects = (title, deadline, description, token) => (
+  createProjects = (title, deadline, description) => (
     superagent
     .post(`${API_HOST}/projects`)
-    .set('Authorization', `token ${token}`)
+    .set('Authorization', `token ${localStorage.token}`)
     .send({title, deadline, description})
   )
 
@@ -43,26 +47,27 @@ class Api {
     .set('Authorization', `token ${token}`)
     .send({title,description})
   )
- 
+
   getTasks = (id) => (
     superagent
     .get(`${API_HOST}/projects/${id}/tasks`)
+    .set('Authorization', `token ${localStorage.token}`)
 
   )
 
-  createTasks = (id, title, description, deadline, token) => (
+  createTasks = (id, title, description, deadline, priority) => (
     superagent
     .post(`${API_HOST}/projects/${id}/tasks`)
-    .set('Authorization', `token ${token}`)
-    .send({title, description, deadline})
+    .set('Authorization', `token ${localStorage.token}`)
+    .send({title, description, deadline, priority})
 
   )
 
-  EditTasks = (id, title, description, deadline, token) => (
+  editTasks = (id, title, description, deadline, priority) => (
     superagent
     .post(`${API_HOST}/projects/${id}/tasks`)
-    .set('Authorization', `token ${token}`)
-    .send({title, description, deadline})
+    .set('Authorization', `token ${localStorage.token}`)
+    .send({title, description, deadline, priority})
   )
 
    getMe = (token) => (
