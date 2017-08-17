@@ -19,23 +19,21 @@ export default class TaskCard extends Component {
 
   render() {
     let { title, description, deadline } = this.props
-  
+
     return (
-        
-        <div> 
+
+        <div>
           <h2 className="task-card">{ title }</h2>
           <div className="info">
             <p>{ description }</p>
             <p className="deadline">deadline  { deadline }</p>
           </div>
           <br/>
-          
-         
-          {this.props.isAdmin ?  <EditButton editButtonClick={this._editTaskForm} /> : null}  
-          {this.state.editTask ? <EditTask /> : null} 
+
+          {this.props.isAdmin ?  <EditButton editButtonClick={this._editTaskForm} /> : null}
+          {this.state.editTask ? <EditTask /> : null}
         </div>
     );
   }
 
 }
-
