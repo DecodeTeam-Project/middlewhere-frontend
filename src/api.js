@@ -1,5 +1,6 @@
 import superagent from 'superagent'
 import { API_HOST } from './config'
+//need get all users api call 
 
 
 class Api {
@@ -66,6 +67,13 @@ class Api {
     superagent
     .get(`${API_HOST}/projects/${id}/tasks`)
     .set('Authorization', `token ${localStorage.token}`)
+  )
+
+  assignTask = (id, assigneeId) => (
+    superagent
+    .post(`${API_HOST}/tasks/${id}/assigned`)
+    .set('Authorization', `token ${localStorage.token}`)
+    .send(assigneeId)
   )
 
    getMe = (token) => (

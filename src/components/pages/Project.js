@@ -22,7 +22,6 @@ export default class Project extends Component {
   fetchData = () => {
       api.getTasks(this.props.params.id)
       .then(res => {
-        console.log(res.body)
         let resultTasks = res.body
         this.setState({
           tasks: resultTasks
@@ -39,7 +38,8 @@ export default class Project extends Component {
         var user = data[1].body;
 
         this.setState({
-          isAdmin: user.id === project.adminUserId
+          isAdmin: user.users_id === project.adminUserId,
+          userId: user.users_id
         })
       })
 
@@ -58,6 +58,7 @@ export default class Project extends Component {
          { tasks ? tasks.map(b =>
           <TaskCard
             isAdmin={this.state.isAdmin}
+            userId={this.state.userId}
             key={b.id}
             id={b.id}
             title={b.title}
