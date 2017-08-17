@@ -38,7 +38,6 @@ class App extends Component {
               <Link to="/" className="App-navbar__title"></Link>
             </div>
           </div>
-
           <Menu show={isMenuOpen} closeMenu={this.closeMenu}/>
           {this.props.children}
         </div>

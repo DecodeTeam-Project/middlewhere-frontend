@@ -13,7 +13,6 @@ class Api {
     superagent
     .post(`${API_HOST}/auth/sessions`)
     .send({ email, password })
-
   )
 
   requestLogout = (token) => (
@@ -25,12 +24,6 @@ class Api {
   getProjectsList = (page, count) => (
     superagent
     .get(`${API_HOST}/projects`)
-    .set('Authorization', `token ${localStorage.token}`)
-  )
-
-  getProjects = (id) => (
-    superagent
-    .get(`${API_HOST}/projects/${id}`)
     .set('Authorization', `token ${localStorage.token}`)
   )
 
@@ -48,11 +41,10 @@ class Api {
     .send({title,description})
   )
 
-  getTasks = (id) => (
+  getProjects = (id) => (
     superagent
-    .get(`${API_HOST}/projects/${id}/tasks`)
+    .get(`${API_HOST}/projects/${id}`)
     .set('Authorization', `token ${localStorage.token}`)
-
   )
 
   createTasks = (id, title, description, deadline, priority) => (
@@ -68,6 +60,12 @@ class Api {
     .post(`${API_HOST}/projects/${id}/tasks`)
     .set('Authorization', `token ${localStorage.token}`)
     .send({title, description, deadline, priority})
+  )
+
+  getTasks = (id) => (
+    superagent
+    .get(`${API_HOST}/projects/${id}/tasks`)
+    .set('Authorization', `token ${localStorage.token}`)
   )
 
    getMe = (token) => (

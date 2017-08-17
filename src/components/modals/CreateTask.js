@@ -12,7 +12,6 @@ export default class CreateBookmark extends Component {
   }
 
   _handleClick = (e) => {
-    e.preventDefault()
     this._fetchData()
   }
 
@@ -27,7 +26,7 @@ export default class CreateBookmark extends Component {
 
   _fetchData = () => {
     api.createTasks(this.props.projectId, this.refs.title.value, this.refs.description.value, this.refs.deadline.value, this.refs.priority.value)
-    .then(res => {
+    .then(data => {
       history.push(`/projects/${this.props.projectId}`)
     })
   }

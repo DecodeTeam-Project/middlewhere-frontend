@@ -13,15 +13,12 @@ export default class TaskCard extends Component {
   _editTaskForm = () =>{
       this.setState({
         editTask: true
-
       })
     }
 
   render() {
     let { title, description, deadline } = this.props
-
     return (
-
         <div>
           <h2 className="task-card">{ title }</h2>
           <div className="info">

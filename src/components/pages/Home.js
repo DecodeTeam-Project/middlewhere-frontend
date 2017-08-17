@@ -12,9 +12,6 @@ export default class Home extends Component {
       projects: [],
     };
   }
-  componentDidUpdate() {
-    console.log(this.state);
-  }
 
   componentDidMount() {
     this._fetchData();
@@ -24,10 +21,9 @@ export default class Home extends Component {
     api.getProjectsList()
     .then(data => {
       this.setState({
-        projects:data.body.projects
+        projects:data.body
       })
     })
-
   }
 
   _createProjectForm = () =>{
@@ -38,7 +34,7 @@ export default class Home extends Component {
 
   render() {
     let { projects } = this.state
-
+    console.log(projects)
     return (
       <div className="home">
         { projects ? projects.map(p =>

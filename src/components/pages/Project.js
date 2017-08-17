@@ -12,7 +12,6 @@ export default class Project extends Component {
     this.state = {
       tasks: [],
       isAdmin: false
-
     };
   }
 
@@ -21,15 +20,14 @@ export default class Project extends Component {
   }
 
   fetchData = () => {
-
       api.getTasks(this.props.params.id)
       .then(res => {
-        let resultTasks = res.body.tasks
-
+        console.log(res.body)
+        let resultTasks = res.body
         this.setState({
           tasks: resultTasks
-      })
         })
+      })
       .catch(console.error)
 
       Promise.all([
@@ -55,7 +53,6 @@ export default class Project extends Component {
 
   render() {
     let { tasks } = this.state;
-
     return (
       <div className="tasks">
          { tasks ? tasks.map(b =>
