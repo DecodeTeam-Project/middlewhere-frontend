@@ -122,7 +122,6 @@ export default class TaskCard extends Component {
 
     let { id, title, description, deadline, priority} = this.props
     let { assignedUsers } = this.state
-    console.log(assignedUsers, "assusers")
     if(deadline) {
       var time = moment(deadline).format("DD-MM-YYYY")
     }

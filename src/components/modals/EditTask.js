@@ -91,7 +91,7 @@ export default class EditTask extends Component {
                   value={this.state.value}
                   autoWidth={true}
                 >
-              
+
                   <MenuItem value={"low"} primaryText="Low" />
                   <MenuItem value={"normal"} primaryText="Normal" />
                   <MenuItem value={"high"} primaryText="High" />
