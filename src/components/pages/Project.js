@@ -39,7 +39,7 @@ export default class Project extends Component {
 
 
   fetchData = () => {
-      api.getTasks(this.props.params.id)
+      api.getTasks(this.props.params.id, localStorage.token)
       .then(res => {
         this.setState({
           tasks: res.body

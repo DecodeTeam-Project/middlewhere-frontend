@@ -62,6 +62,13 @@ class Api {
     .set('Authorization', `token ${localStorage.token}`)
   )
 
+  getAssignedForTask = (id) => (
+    superagent
+    .get(`${API_HOST}/tasks/${id}/assigned`)
+    .set('Authorization', `token ${localStorage.token}`)
+  )
+
+
   createTasks = (id, title, description, deadline, priority) => (
     superagent
     .post(`${API_HOST}/projects/${id}/tasks`)
@@ -77,7 +84,7 @@ class Api {
     .send({projectId, id, title, description, deadline, priority, token})
   )
 
-  getTasks = (id) => (
+  getTasks = (id, token) => (
     superagent
     .get(`${API_HOST}/projects/${id}/tasks`)
     .set('Authorization', `token ${localStorage.token}`)

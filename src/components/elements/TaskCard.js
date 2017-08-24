@@ -58,7 +58,6 @@ export default class TaskCard extends Component {
         completed: 1
       })
     }
-    console.log(this.state.completed, "TaskCard.jssssssssssss 61")
     api.completedTasks(this.props.id, this.state.completed, localStorage.token).catch(err=>console.log(err))
   }
 
@@ -110,6 +109,7 @@ export default class TaskCard extends Component {
 
 
   render() {
+
     const dataSource = this.state.dataSource
     const newDataSource = dataSource.map(item => {
         return Object.assign({fullName:item.firstName+ " " +item.lastName + " " + item.email},item)});
@@ -121,7 +121,6 @@ export default class TaskCard extends Component {
 
     let { id, title, description, deadline, priority} = this.props
     let { assignedUsers, count, completed } = this.state
-    console.log(this.state.assignedUsers, "assignedUsers, TaskCard.js 124")
     if(deadline) {
       var time = moment(deadline).format("DD-MM-YYYY")
     }
@@ -178,9 +177,9 @@ export default class TaskCard extends Component {
                 <Face color="#ef5350" /><CardText color="#ef5350"> {count}</CardText>
 
               <CardActions>
-                  <RaisedButton label="Complete Task" secondary={true} onClick={this._completedTask}/> 
+                  <RaisedButton label="Complete Task" secondary={true} onClick={this._completedTask}/>
                   {/* {completed === 0 ? <RaisedButton label="Task Completed" secondary={true} onClick={this._completedTask}/> : <RaisedButton label="Complete Task" secondary={true} onClick={this._completedTask}/>}  */}
-              </CardActions> 
+              </CardActions>
 
             </Card>
 
