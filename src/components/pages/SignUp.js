@@ -28,8 +28,6 @@ export default class SignUp extends Component {
     var email = this.refs.email.getValue()
     var password = this.refs.password.getValue()
 
-    // this._clearErrorState();
-
      if(!firstName){
         this.setState({
         firstNameError:"First Name is required"

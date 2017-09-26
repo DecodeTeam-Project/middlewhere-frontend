@@ -5,15 +5,9 @@ import './TaskCard.css';
 import '../App.css';
 
 export default class AssignedList extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-    };
-  }
 
   render() {
     let { firstName, avatarUrl } = this.props
-
 
     return (
       <div className="col-small-3 task-assigned-text">
@@ -25,4 +19,4 @@ export default class AssignedList extends Component {
   }
 
 }
-// {this.props.isAdmin ? <FlatButton primary={true} icon={<EditorModeEdit/>} onClick={this._editProjectForm}/> :null}
+

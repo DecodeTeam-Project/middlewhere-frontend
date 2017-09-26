@@ -12,10 +12,14 @@ export default class EditTask extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      open: false,
       inputValue:'',
       value:'normal'
     };
+  }
+
+
+  _handleChange = (e, date) => {
+    this.setState({date: date})
   }
 
   _handleInput = (e) => {
@@ -25,21 +29,19 @@ export default class EditTask extends Component {
     })
   }
 
-  _handleChange = (e, date) => {
-    this.setState({date: date})
+  _handlePriority = (event, index, value) => this.setState({value});
+  
+
+  _handleClose = () => {
+    this.props.closeForm()
   }
 
-
+  
   _handleClick = (e) => {
     e.preventDefault()
     this._fetchData()
     }
-
-  _handleClose = () => {
-      this.props.closeForm()
-  }
-  _handlePriority = (event, index, value) => this.setState({value});
-
+ 
   _fetchData = () =>{
     if(!this.refs.title.getValue()){
       this.setState({titleError: "Title is required"})
@@ -55,7 +57,6 @@ export default class EditTask extends Component {
       localStorage.token)
     .then(res => {
       this.props.closeForm();
-      //history.push(`/projects/${this.props.id}`)
     })
     .catch(error=> console.log(error))
     )
@@ -69,12 +70,9 @@ export default class EditTask extends Component {
 
   render(){
     const actions = [
-      < FlatButton label="Cancel" primary={true}
-      onClick={this._handleClose} />,
-      < FlatButton label="Submit" primary={true} keyboardFocused={true}
-      onClick={(e) => this._handleClick(e)} />
+      < FlatButton label="Cancel" primary={true} onClick={this._handleClose} />,
+      < FlatButton label="Submit" primary={true} keyboardFocused={true} onClick={(e) => this._handleClick(e)} />
     ];
-
 
     return (
       <div className="createNewProject">
@@ -84,7 +82,7 @@ export default class EditTask extends Component {
               paperClassName="dialogPaper"
               actions={actions}
               modal={false}
-              open={true}
+              open={this.props.openForm}
               onRequestClose={this._handleClose} >
               <TextField floatingLabelText="Title: " defaultValue={this.props.title} type="text" ref="title" maxLength='100' errorText={this.state.titleError} onChange={this._clearErrorState}/>
               <DatePicker hintText="Deadline" mode="landscape" ref="deadline" onChange={(e, date) => this._handleChange(e, date)}/>

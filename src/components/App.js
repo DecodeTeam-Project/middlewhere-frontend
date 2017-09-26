@@ -9,8 +9,8 @@ import SideMenu from './modals/SideMenu'
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import {
   cyan500, cyan700,
-  pinkA200, orange300,
-  grey100, grey300, grey400, grey500,grey900,grey700,
+  orange300,
+  grey100, grey300, grey400, grey500,grey900,
   white, darkBlack, fullBlack,
 } from 'material-ui/styles/colors';
 import {fade} from 'material-ui/utils/colorManipulator';
@@ -20,23 +20,23 @@ import './App.css';
 
 const muiTheme = getMuiTheme({
   spacing: spacing,
-    fontFamily: 'Roboto, sans-serif',
-    palette: {
-      primary1Color: '#00BFA5',
-      primary2Color: cyan700,
-      primary3Color: grey400,
-      accent1Color: orange300,
-      accent2Color: grey100,
-      accent3Color: grey500,
-      textColor: grey900,
-      alternateTextColor: white,
-      canvasColor: white,
-      borderColor: grey300,
-      disabledColor: fade(darkBlack, 0.3),
-      pickerHeaderColor: cyan500,
-      clockCircleColor: fade(darkBlack, 0.07),
-      shadowColor: fullBlack,
-    },
+  fontFamily: 'Roboto, sans-serif',
+  palette: {
+    primary1Color: '#00BFA5',
+    primary2Color: cyan700,
+    primary3Color: grey400,
+    accent1Color: orange300,
+    accent2Color: grey100,
+    accent3Color: grey500,
+    textColor: grey900,
+    alternateTextColor: white,
+    canvasColor: white,
+    borderColor: grey300,
+    disabledColor: fade(darkBlack, 0.3),
+    pickerHeaderColor: cyan500,
+    clockCircleColor: fade(darkBlack, 0.07),
+    shadowColor: fullBlack,
+  },
 });
 
 
@@ -44,12 +44,12 @@ class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      open: false,
+      open: false
      }
   }
 
-
-
+  //browserHistory.push() ; to manually redirect the user in any of the code
+  //Link to '/login' -> Login.js
   _login = () => {
     history.push(`login`)
   }
@@ -64,16 +64,14 @@ class App extends Component {
     history.push(`/signup`)
   }
 
-
-
   handleToggle=() => this.setState({open: !this.state.open});
-
   handleClose=() => this.setState({open: false});
+  
   render() {
 
     let style = {
       position:'fixed',
-      top:0,
+      top:0
     }
 
 
@@ -92,14 +90,11 @@ class App extends Component {
             iconElementRight={auth.isLoggedIn() ?
                <FlatButton label="Logout" onClick={this._logOut}/>: <div><FlatButton label="Login" onClick={this._login}/><FlatButton label="Signup" onClick={this._signUp}/></div> }
           />
-          {this.state.open ? <SideMenu menuState={this.state.open} closeState={this.handleClose}/> : null}
+          {this.state.open ? (auth.isLoggedIn() ? <SideMenu menuState={this.state.open} closeState={this.handleClose}/> : null) : null}
           {this.props.children}
           </div>
       </MuiThemeProvider>
     );
   }
 }
-
-
 export default App;
-// iconStyleLeft={{color: '#000', fill:'rgb(0,0,0)'}}

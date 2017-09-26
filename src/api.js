@@ -1,7 +1,5 @@
 import superagent from 'superagent'
 import { API_HOST } from './config'
-//need get all users api call
-
 
 class Api {
   requestSignup = (firstName, lastName, email, password) => (
@@ -9,38 +7,43 @@ class Api {
     .post(`${API_HOST}/auth/users`)
     .send({firstName, lastName, email, password})
   )
-
+  // Create a new session 
   requestLogin = (email, password) => (
     superagent
     .post(`${API_HOST}/auth/sessions`)
     .send({ email, password })
   )
 
-  resetStatus = (token) => (
+  //UPDATE users SET status='OFFLINE' to 'ONLINE'
+  resetStatus = () => (
     superagent
     .patch(`${API_HOST}/auth/resetStatus`)
-    .set('Authorization', `token ${token}`)
-    //.send({ email, password })
+    .set('Authorization', `token ${localStorage.token}`)
   )
 
-  requestLogout = (token) => (
+  // Delete a session
+  requestLogout = () => (
     superagent
     .delete(`${API_HOST}/auth/sessions`)
-    .set('Authorization', `token ${token}`)
+    .set('Authorization', `token ${localStorage.token}`)
   )
 
-  // setUserStatus = (email, password) => (
-  //   superagent
-  //   .patch(`${API_HOST}/auth/sessions`)
-  //   .send({ email, password })
-  // )
 
+  // GET ALL THE PROJECTS FOR THE USER WITH ProgressPct FOR CURRENT USER
   getProjectsList = (page, count) => (
     superagent
     .get(`${API_HOST}/projects`)
     .set('Authorization', `token ${localStorage.token}`)
   )
 
+  //RETRIEVE THE DATA OF A SINNGLE PROJECT
+  getProjects = (projectId) => (
+    superagent
+    .get(`${API_HOST}/projects/${projectId}`)
+    .set('Authorization', `token ${localStorage.token}`)
+  )
+
+  // Create a new project
   createProjects = (title, deadline, description) => (
     superagent
     .post(`${API_HOST}/projects`)
@@ -48,90 +51,94 @@ class Api {
     .send({title, deadline, description})
   )
 
-  editProjects = (id, title, description, deadline, token) => (
+  // Modify an owned project
+  editProjects = (projectId, title, description, deadline) => (
     superagent
-    .patch(`${API_HOST}/projects/${id}`)
-    .set('Authorization', `token ${token}`)
-    .send({title,description,deadline, token})
+    .patch(`${API_HOST}/projects/${projectId}`)
+    .set('Authorization', `token ${localStorage.token}`)
+    .send({title,description,deadline})
 
   )
 
-  getProjects = (id) => (
+  // Retrieve all the tasks for a single project
+  getTasks = (projectId) => (
     superagent
-    .get(`${API_HOST}/projects/${id}`)
+    .get(`${API_HOST}/projects/${projectId}/tasks`)
     .set('Authorization', `token ${localStorage.token}`)
   )
 
-  createTasks = (id, title, description, deadline, priority) => (
+  // Create a new task under a project
+  createTasks = (projectId, title, description, deadline, priority) => (
     superagent
-    .post(`${API_HOST}/projects/${id}/tasks`)
+    .post(`${API_HOST}/projects/${projectId}/tasks`)
     .set('Authorization', `token ${localStorage.token}`)
-    .send({id,title, description, deadline, priority})
+    .send({projectId,title, description, deadline, priority})
 
   )
 
-  editTasks = (projectId, id, title, description, deadline, priority, token) => (
+  // Modify a task
+  editTasks = (projectId, taskId, title, description, deadline, priority, token) => (
     superagent
-    .patch(`${API_HOST}/tasks/${id}`)
-    .set('Authorization', `token ${token}`)
-    .send({projectId, id, title, description, deadline, priority, token})
+    .patch(`${API_HOST}/tasks/${taskId}`)
+    .set('Authorization', `token ${localStorage.token}`)
+    .send({projectId, taskId, title, description, deadline, priority, token})
   )
 
-  getTasks = (id) => (
+  updateCompletion = (taskId, token) => (
     superagent
-    .get(`${API_HOST}/projects/${id}/tasks`)
+    .get(`${API_HOST}/tasks/${taskId}/completed`)
     .set('Authorization', `token ${localStorage.token}`)
   )
 
-  completedTasks = (id, completed, token) => (
+  // CHANGE TASK COMPLETION STATUS IF IT BELONGS TO USER
+  completedTasks = (taskId, completed) => (
     superagent
-    .patch(`${API_HOST}/tasks/${id}/completed`)
-    .set('Authorization', `token ${token}`)
-    .send({id, completed})
+    .patch(`${API_HOST}/tasks/${taskId}/completed`)
+    .set('Authorization', `token ${localStorage.token}`)
+    .send({taskId, completed})
   )
 
-  updateCompletion = (id, token) => (
+  // RETRIEVE USERS THAT ARE ASSIGNED FOR A GIVEN TASK
+  getAssignedUsers = (taskId) => (
     superagent
-    .get(`${API_HOST}/tasks/${id}/completed`)
-    .set('Authorization', `token ${token}`)
+    .get(`${API_HOST}/tasks/${taskId}/assigned`)
+    .set('Authorization', `token ${localStorage.token}`)
+
   )
 
-  assignTask = (id, assigneeId) => (
+  assignTask = (taskId, assigneeId) => (
     superagent
-    .post(`${API_HOST}/tasks/${id}/assigned`)
+    .post(`${API_HOST}/tasks/${taskId}/assigned`)
     .set('Authorization', `token ${localStorage.token}`)
     .send({assigneeId})
   )
 
-  getAssignedUsers = (id) => (
-    superagent
-    .get(`${API_HOST}/tasks/${id}/assigned`)
-    .set('Authorization', `token ${localStorage.token}`)
-
-  )
-   getMe = (token) => (
+  // Retrieve current user
+   getMe = () => (
     superagent
     .get(`${API_HOST}/auth/me`)
-    .set('Authorization', `token ${token}`)
+    .set('Authorization', `token ${localStorage.token}`)
   )
 
-  getAll = (token) => (
+  // RETRIEVE ALL USERS THAT ARE COWORKERS WITH THE CURRENT USER
+  getAll = () => (
    superagent
    .get(`${API_HOST}/auth/all`)
    .set('Authorization', `token ${localStorage.token}`)
  )
 
- getAutoComplete = (queryTerm) => (
-   superagent
-   .get(`${API_HOST}/auth/autocomplete/?queryTerm=${queryTerm}`)
-   .set('Authorization', `token ${localStorage.token}`)
- )
+  // RETRIEVE USER IN SEARCH BAR FOR TASK ASSIGNMENT
+  getAutoComplete = (queryTerm) => (
+    superagent
+    .get(`${API_HOST}/auth/autocomplete/?queryTerm=${queryTerm}`)
+    .set('Authorization', `token ${localStorage.token}`)
+  )
 
- getUserAvatar = (userId) => (
-  superagent
-   .get(`${API_HOST}/auth/avatar/${userId}`)
-   .set('Authorization', `token ${localStorage.token}`)
- )
+  getUserAvatar = (userId) => (
+    superagent
+    .get(`${API_HOST}/auth/avatar/${userId}`)
+    .set('Authorization', `token ${localStorage.token}`)
+  )
 
 }
 

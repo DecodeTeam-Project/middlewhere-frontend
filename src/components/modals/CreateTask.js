@@ -17,19 +17,11 @@ export default class CreateTask extends Component {
     };
   }
 
-  // _handleClick = (e) => {
-  //   e.preventDefault();
-  //   this._fetchData()
-  // }
-  //
-  // _handleInput = (e) => {
-  //   e.preventDefault()
-  //   if (e.target.value.length <= 80){
-  //     this.setState({
-  //       inputValue:e.target.value
-  //     })
-  //   }
-  // }
+  _handleChange = (e, date) => {
+    this.setState ({
+      date:date
+    })
+  }
 
   handleInput = (e) => {
     e.preventDefault()
@@ -38,24 +30,12 @@ export default class CreateTask extends Component {
     })
   }
 
-  handleClose = () => {
-    this.setState({open: false});
-  };
-
+  _handlePriority = (event, index, value) => this.setState({value});
 
   _handleClick = (e) => {
     e.preventDefault()
     this._fetchData()
     }
-
-  _handleChange = (e, date) => {
-    this.setState ({
-      date:date
-    })
-
-  }
-
-  _handlePriority = (event, index, value) => this.setState({value});
 
   _fetchData = () => {
     if(!this.refs.title.getValue()){
@@ -72,12 +52,6 @@ export default class CreateTask extends Component {
         .then(data => {
           this.props.onCreate();
         })
-        .then(data => {
-          this.props.closeState();
-        })
-        .then(data => {
-          this.props.closeForm();
-        })
         .catch(error=> console.log(error))
     )
   }
@@ -87,30 +61,14 @@ export default class CreateTask extends Component {
       this.setState({titleError: ""})
     }
   }
-  // render() {
-  //   return (
-  //     <div>
-  //       <form>
-  //         TITLE: <input type="text" ref="title"/>
-  //         <hr/>
-  //         DESCRIPTION: <input type="text" ref="description"  value={this.state.inputValue} onClick={(e)=>this._handleInput(e)}/>
-  //         {80-this.state.inputValue.length}
-  //         <hr/>
-  //         PRIORITY: <input type="text" ref="priority"/>
-  //         <hr/>
-  //         DEADLINE: <input type="text" ref="deadline"/>
-  //       </form>
-  //       <button type="submit" onClick={(e) => this._handleClick(e)}>Create</button>
-  //     </div>
-  //   );
-  // }
+ 
 
   render(){
     const actions = [
     <FlatButton
       label="Cancel Task"
       primary={true}
-      onClick={this.props.closeForm}
+      onClick={this.props.closeState}
     />,
     <FlatButton
       label="Submit Task"
@@ -127,8 +85,8 @@ export default class CreateTask extends Component {
          paperClassName="dialogPaper"
          actions={actions}
          modal={false}
-         open={true}
-         onRequestClose={this.props.closeForm}
+         open={this.props.openState}
+         onRequestClose={this.props.closeState}
        >
           <TextField floatingLabelText="Title: " type="text" ref="title" maxLength='50' errorText={this.state.titleError} onChange={this._clearErrorState}/>
 

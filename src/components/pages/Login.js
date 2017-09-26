@@ -30,9 +30,6 @@ export default class Login extends Component {
     let password = this.refs.password.getValue()
 
 
-    // this._clearErrorState();
-
-
     if(!email){
       this.setState({
         //throw error message(<div>Please enter an valid email and password</div>)
@@ -49,13 +46,16 @@ export default class Login extends Component {
     }
 
     if(email && password) {
-      //check if input is valid info
+      //Create a new session(token)
       api.requestLogin(email, password)
-      //process login and push it to the homepage
+      //check if token already exist if not, process login 
       auth.login(email, password)
-      .then(() => api.resetStatus(localStorage.token))
+      //Update users SET status='OFFLINE' to 'ONLINE' and push it to the homepage
+      .then(() => api.resetStatus())
       .then(() => {
         this.setState({error:false})
+        //<BrowserRouter; browserhistroy> creates its own history instance, and listens for changes on that. 
+        //So a different instance will change the url but not update the <BrowserRouter>. -> use <withRouter>
         this.props.router.push('/projects')})
       .catch((error) =>
         this.setState({error:true})
@@ -106,3 +106,4 @@ export default class Login extends Component {
   }
 
 }
+

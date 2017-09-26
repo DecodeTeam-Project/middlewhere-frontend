@@ -1,21 +1,14 @@
 import React, {Component} from 'react';
 import EditTask from '../modals/EditTask';
-// import CompleteButton from './CompleteButton'
 import api from '../../api';
 import './TaskCard.css';
-import {Card, CardHeader, CardTitle, CardText, CardActions, LinearProgress, FlatButton} from 'material-ui';
-import FontIcon from 'material-ui/FontIcon';
+import {Card, CardTitle, CardText, CardActions} from 'material-ui';
 import EditorModeEdit from 'material-ui/svg-icons/editor/mode-edit';
 import Face from 'material-ui/svg-icons/action/face';
-import FloatingActionButton from 'material-ui/FloatingActionButton';
 import moment from 'moment';
 import RaisedButton from 'material-ui/RaisedButton';
 import AutoComplete from 'material-ui/AutoComplete';
-import Menu from 'material-ui/Menu';
-import MenuItem from 'material-ui/MenuItem';
 import AssignedList from './AssignedList'
-import {pinkA200, cyan500} from 'material-ui/styles/colors';
-import {cyan800} from 'material-ui/styles/colors';
 import List from 'material-ui/List/List';
 import './TaskCard.css';
 import './ProjectCard.css';
@@ -24,18 +17,64 @@ export default class TaskCard extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      editTask:false,
+      editTask: false,
       completed: this.props.completed,
-      open: false,
+      forMeToComplete: false,
       dataSource:[],
       searchText : ''
     };
   }
+
+
   componentDidMount(){
     this._fetchUsers()
   }
 
-  fetchData = () => {
+  _fetchUsers(){
+    api.getAssignedUsers(this.props.id)
+    .then(data => {
+      this.setState({
+        assignedUsers:data.body,
+        count:data.body.length
+      })
+    })
+    .then(() => {
+      let { assignedUsers } = this.state;
+      assignedUsers.forEach( assignedUser => {
+        //Check if the user is an assignedUser to the task, if true -> show Complete button.
+        if (assignedUser.id === this.props.userId){
+          return this.setState({
+                  forMeToComplete: true
+                })
+        }
+      })
+    })
+  }
+
+
+  // CHANGE TASK COMPLETION STATUS IF IT BELONGS TO USER
+  _completedTask = () => {
+    var newCompleted = this.state.completed ? 0 : 1;
+
+    this.setState({
+      completed: newCompleted
+    })
+    api.completedTasks(this.props.id, newCompleted).catch(err=>console.log(err))
+  }
+
+
+  // AUTO COMPLETE USER SEARCH BAR FOR TASK ASSIGNMENT
+
+  //SearchText input
+  handleUpdateInput (searchText) {
+    this.setState({
+    searchText: searchText,
+    })
+    this._fetchData()
+  }
+
+  //Retrieve user in search bar
+  _fetchData = () => {
     api.getAutoComplete(this.state.searchText)
     .then(res => {
       this.setState({
@@ -43,79 +82,41 @@ export default class TaskCard extends Component {
       })
     })
   }
-
-
-  _completedTask = () => {
-    var newCompleted = this.state.completed ? 0 : 1;
-
-    this.setState({
-      completed: newCompleted
+  
+  //Clear searchText
+  handleRequest = (searchText) => {
+    this.setState( {
+      searchText: '',
     })
-
-    api.completedTasks(this.props.id, newCompleted, localStorage.token).catch(err=>console.log(err))
+    this._assignTask(searchText)
   }
 
+  //Assign a user to the task and rerender assigned users
+  _assignTask(searchText){
+    api.assignTask(this.props.id, searchText.userId)
+    .then(() => {
+      this._fetchUsers()
+    })
+  }
+
+
+  //OPEN AND CLOSE EDIT TASK FORM
   _editTaskForm = () =>{
-      this.setState({
-        editTask: true
-      })
-    }
+    this.setState({
+      editTask: true
+    })
+  }
 
-    _closeTaskForm = () => {
-      this.setState({
-        editTask:false
-      })
-        this.props.ReRenderProject();
-    }
+  _closeTaskForm = () => {
+    this.setState({
+      editTask:false
+    })
+    this.props.ReRenderProject();
+  }
 
-    handleUpdateInput (searchText) {
-      this.setState({
-      searchText: searchText,
-     })
-     this.fetchData()
-   }
 
-    handleRequest = (searchText) => {
-      this.setState( {
-        searchText: '',
-      })
-      this._assignTask(searchText)
-    }
-
-    _assignTask(searchText){
-      api.assignTask(this.props.id, searchText.userId)
-      .then(() => {
-        this._fetchUsers()
-      })
-    }
-
-    _fetchUsers(taskId){
-      api.getAssignedUsers(this.props.id)
-      .then(data => {
-        // console.log(data,"DDAATTA")
-        this.setState({
-          assignedUsers:data.body,
-          count:data.body.length
-        })
-      })
-      .then(() => api.getMe(localStorage.token))
-      .then((me) => {
-        var assigned = this.state.assignedUsers;
-
-        assigned = assigned.map(function (user) {
-            return user.id;
-        });
-        for (var i = 0; i < assigned.length; i++) {
-            if (assigned[i]==me.body.users_id){
-              this.setState({
-                forMeToComplete:true
-              })
-            }
-        }
-
-      })
-    }
   render() {
+    //Display Form of retrieved user info in search bar 
     const dataSource = this.state.dataSource
     const newDataSource = dataSource.map(item => {
         return Object.assign({fullName:item.firstName+ " " +item.lastName + " " + item.email},item)});
@@ -123,11 +124,14 @@ export default class TaskCard extends Component {
       text: 'fullName',
       value: 'userId'
   }
+
     let { id, title, description, deadline, priority} = this.props
     let { assignedUsers, count, completed , forMeToComplete} = this.state
+
     if(deadline) {
       var time = moment(deadline).format("DD-MM-YYYY")
     }
+
     let style = {
       fontSize: '1.5rem',
       padding: '0 1.2rem'
@@ -142,12 +146,13 @@ export default class TaskCard extends Component {
     return (
       <div>
             <Card style={style} className="task-card">
+
+              {/* Edit Button */}
               <CardActions>
                 {this.props.isAdmin ? <EditorModeEdit style={editTaskStyle} hoverColor={'#00BFA5'} className="task-edit-button" onClick={this._editTaskForm}/>:null}
               </CardActions>
                 <CardTitle title={ title } titleStyle={style} actAsExpander={true} showExpandableButton={true}/>
-                <List className="task-assigned"
-                expandable={true}>
+                <List className="task-assigned">
                 { assignedUsers ? assignedUsers.map(u =>
                     <AssignedList
                       key={u.id}
@@ -163,12 +168,13 @@ export default class TaskCard extends Component {
                 {deadline ? <CardText expandable={true}> <strong>Deadline </strong> <br/> { time } </CardText> : null}
                 {priority ? <CardText expandable={true} > {priority} priority </CardText> : null}
 
+                  {/* AutoComplete User SearchText */}
                   { this.props.isAdmin ? <AutoComplete
-                      floatingLabelText="Assign a Task"
+                      floatingLabelText="Assign users"
                       filter={AutoComplete.caseInsensitiveFilter}
                       fullWidth={true}
                       openOnFocus={false}
-                      dataSource={newDataSource}
+                      dataSource={newDataSource} 
                       dataSourceConfig={dataSourceConfig}
                       searchText={this.state.searchText}
                       onUpdateInput={this.handleUpdateInput.bind(this)}
@@ -179,19 +185,17 @@ export default class TaskCard extends Component {
                 <br/>
                 <Face color="#ef5350" /><CardText style={{padding:'0', margin:'0'}} color="#ef5350"> {count}</CardText>
 
-
+                {/* Complete Button */}
               <CardActions style={{padding:'1rem', fontWeight:'900'}}>
-                  {/* <RaisedButton label="Complete Task" secondary={true} onClick={this._completedTask}/> */}
-                  {(completed === 1 && forMeToComplete) ? <RaisedButton label="Task Completed" secondary={true} onClick={this._completedTask}/>
-                  : (completed === 0 && forMeToComplete) ? <RaisedButton label="Complete Task" primary={true} onClick={this._completedTask}/>
+                  {(forMeToComplete && completed === 1 ) ? <RaisedButton label="Task Completed" secondary={true} onClick={this._completedTask}/>
+                  : (forMeToComplete && completed === 0 ) ? <RaisedButton label="Complete Task" primary={true} onClick={this._completedTask}/>
                   : null}
               </CardActions>
-
-
-
             </Card>
+          
+          {/* Edit Task */}
           {this.state.editTask ? <EditTask projectId={this.props.projectId} id={id} title={title}
-          description={description} deadline={deadline} closeForm={this._closeTaskForm}/> : null}
+          description={description} deadline={deadline} openForm={this.state.editTask} closeForm={this._closeTaskForm}/> : null}
       </div>
     );
   }

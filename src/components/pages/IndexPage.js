@@ -99,20 +99,3 @@ export default class IndexPage extends Component {
 
   }
 }
-
-//<img className="header-image"src= {image}/>
-// <div class="box1">
-//   <p class="title">notify<span>.</span></p>
-//   <p class= "header-desc">A great new free psd theme to showcase your new application</p>
-// </div>
-//<Paper style={style} zDepth={1} circle={true} />
-// <div class="property-logo">heeeello</div>
-//   <div class="row">
-//     <div class="properties col-large-3 col-medium-6 col-small-12">
-//       <div class="property-logo">heeeello</div>
-//
-        // <p class="subtitle">Editable Theme</p>
-        // <p class="paragraph">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse laoreet tempus.</p>
-//
-//     </div>
-//   </div>
