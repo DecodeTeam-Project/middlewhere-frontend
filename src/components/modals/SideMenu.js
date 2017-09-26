@@ -21,21 +21,16 @@ export default class DrawerUndockedExample extends React.Component {
   }
 
   _fetchData = () => {
-    api.getMe(localStorage.token)
-    .then(me => {
+    Promise.all([
+      api.getMe(),
+      api.getAll()
+    ])
+    .then(data => {
       this.setState({
-        me : me.body
+        me: data[0].body,
+        coworkers: data[1].body
       })
     })
-    
-    api.getAll(localStorage.token)
-    .then((coworkers) => {
-      if (coworkers) {
-        this.setState({
-          coworkers : coworkers.body
-        });
-      }
-    })  
   }
  
   render() {
