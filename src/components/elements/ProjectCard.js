@@ -2,15 +2,13 @@
 import React, {Component} from 'react';
 import { Link } from 'react-router';
 import moment from 'moment';
+import api from '../../api';
 import EditProject from '../modals/EditProject'
 import {Card, CardText, CardActions, CardMedia, CardTitle, LinearProgress} from 'material-ui';
 import EditorModeEdit from 'material-ui/svg-icons/editor/mode-edit';
+import Avatar from 'material-ui/Avatar';
 import './ProjectCard.css';
 import '../App.css';
-import api from '../../api';
-import Avatar from 'material-ui/Avatar';
-
-
 
 export default class ProjectCard extends Component {
   constructor(props) {
@@ -85,7 +83,6 @@ export default class ProjectCard extends Component {
           priority:'linear-gradient(140deg, rgba(255, 213, 79,1) , rgba(255, 152, 0,1))'
         })
       }
-
      
       else if(filteredLow.length > filteredNormal.length && filteredLow.length > filteredHigh.length ){
         this.setState({
